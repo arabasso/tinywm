@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "xlocale": "c",
+        "xiosbase": "c",
+        "iterator": "c",
+        "xhash": "c",
+        "xmemory": "c",
+        "random": "c",
+        "array": "c",
+        "string": "c",
+        "string_view": "c",
+        "span": "c"
+    }
+}

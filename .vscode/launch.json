@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Debug CMake Active Target (GDB)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${command:cmake.launchTargetPath}",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "gdb",
+        "setupCommands": [
+          {
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      },
+      {
+        "name": "Debug CMake Active Target (LLDB)",
+        "type": "cppdbg",
+        "request": "launch",
+        "program": "${command:cmake.launchTargetPath}",
+        "args": [],
+        "stopAtEntry": false,
+        "cwd": "${workspaceFolder}",
+        "environment": [],
+        "externalConsole": false,
+        "MIMode": "lldb",
+        "setupCommands": [
+          {
+            "text": "-enable-pretty-printing",
+            "ignoreFailures": true
+          }
+        ]
+      }
+    ]
+  }
