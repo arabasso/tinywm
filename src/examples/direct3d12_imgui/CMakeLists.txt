@@ -9,4 +9,11 @@ if (HAVE_D3D12)
 	target_include_directories (${EXE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 	target_link_libraries (${EXE_NAME} tinywm d3d12 dxgi DirectX-Headers DirectX-Guids imgui_d3d12_tinywm)
+
+	install(TARGETS ${EXE_NAME}
+		BUNDLE DESTINATION ${INSTALL_PATH}
+		RUNTIME DESTINATION ${INSTALL_PATH}
+		LIBRARY DESTINATION ${INSTALL_PATH}
+		ARCHIVE DESTINATION ${INSTALL_PATH})
+
 endif()

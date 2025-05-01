@@ -11,4 +11,11 @@ if (HAVE_METAL)
 	target_include_directories (${EXE_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 
 	target_link_libraries (${EXE_NAME} tinywm imgui_mtl_tinywm)
+
+	install(TARGETS ${EXE_NAME}
+		BUNDLE DESTINATION ${INSTALL_PATH}
+		RUNTIME DESTINATION ${INSTALL_PATH}
+		LIBRARY DESTINATION ${INSTALL_PATH}
+		ARCHIVE DESTINATION ${INSTALL_PATH})
 endif ()
+
