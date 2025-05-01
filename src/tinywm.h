@@ -339,6 +339,7 @@ typedef struct twm_data {
 			NSApplication* app;
             twm_window clip_window;
             int clip_x, clip_y;
+            bool cursor_visible;
 
 			#ifdef TWM_GL
 			#pragma clang diagnostic push
@@ -4097,6 +4098,8 @@ bool is_mouse_in_client_area(NSEvent* event);
 int twm_init() {
 	setlocale(LC_ALL, "");
 
+    _twm_data.cursor_visible = true;
+    
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     
@@ -4499,10 +4502,12 @@ void twm_show_cursor(bool flag) {
 	else {
 		[NSCursor hide];
 	}
+    
+    _twm_data.cursor_visible = flag;
 }
 
 bool twm_cursor_is_visible() {
-	return ![NSCursor isHidden];
+	return _twm_data.cursor_visible;
 }
 
 void twm_cursor_position(int* x, int* y) {
@@ -4749,11 +4754,13 @@ static inline int _twm_translate_event(NSDate * untilDate, twm_event * evt, twm_
 						NSRect screenRect = [_twm_data.clip_window convertRectToScreen:_twm_data.clip_window.contentView.frame];
 						
 						NSRect frame = NSMakeRect(screenRect.origin.x, screenRect.origin.y, screenRect.size.width, screenRect.size.height);
+                        
+                        frame.origin.y += _twm_data.clip_window.frame.size.height - _twm_data.clip_window.contentView.frame.size.height;
 						
 						_twm_data.clip_x = fmax(_twm_data.clip_x, frame.origin.x);
 						_twm_data.clip_x = fmin(_twm_data.clip_x, frame.origin.x + frame.size.width);
-						_twm_data.clip_y = fmax(_twm_data.clip_y, frame.origin.y);
-						_twm_data.clip_y = fmin(_twm_data.clip_y, frame.origin.y + frame.size.height);
+						_twm_data.clip_y = fmax(_twm_data.clip_y, frame.origin.y + 4);
+						_twm_data.clip_y = fmin(_twm_data.clip_y, frame.origin.y + frame.size.height + 2);
 						
 						CGWarpMouseCursorPosition(CGPointMake(_twm_data.clip_x, _twm_data.clip_y));
 					}
@@ -4933,7 +4940,7 @@ static inline int _twm_translate_event(NSDate * untilDate, twm_event * evt, twm_
 }
 
 void twm_wait_event(twm_event* evt) {
-	return _twm_translate_event([NSDate distantFuture], evt, nil);
+	_twm_translate_event([NSDate distantFuture], evt, nil);
 }
 
 int twm_peek_event(twm_event* evt) {
