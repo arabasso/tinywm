@@ -326,6 +326,7 @@ typedef struct twm_data {
 		Cursor cursor[2];
 		int opcode;
 		XContext window_context;
+		bool cursor_visible;
 
 		#ifdef TWM_GL
 			int pixel_attribs[TWM_GL_PIXEL_ATTRIBS_SIZE];
@@ -2761,6 +2762,7 @@ int twm_init() {
 	if (_twm_data.display == NULL) return 0;
 
 	_twm_data.window_context = XUniqueContext();
+	_twm_data.cursor_visible = true;
 
 	int event, error;
 	if (!XQueryExtension(_twm_data.display, "XInputExtension", &_twm_data.opcode, &event, &error)) {
@@ -3260,13 +3262,12 @@ void twm_unclip_cursor() {
 void twm_show_cursor(bool flag) {
 	XDefineCursor(_twm_data.display, DefaultRootWindow(_twm_data.display), _twm_data.cursor[flag ? TWM_X11_CURSOR_DEFAULT : TWM_X11_CURSOR_INVISIBLE]);
 	XFlush(_twm_data.display);
+
+	_twm_data.cursor_visible = flag;
 }
 
 bool twm_cursor_is_visible() {
-	Cursor currentCursor;
-	XGetWindowAttributes(display, window, &attr);
-
-	return attr.cursor != TWM_X11_CURSOR_INVISIBLE;
+	return _twm_data.cursor_visible;
 }
 
 void twm_set_window_ptr(twm_window window, void * ptr) {
