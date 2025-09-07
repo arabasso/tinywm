@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
 	twm_gl_make_current(context);
 
-	twm_gl_set_swap_interval(context, 0);
+	twm_gl_set_swap_interval(context, 1);
 
 	gladLoaderLoadGL();
 
@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
 
 		twm_gl_swap_buffers(context);
 
-		frame_time = twm_fps_limit(-1, start_time);
+		frame_time = twm_fps_limit(60, start_time);
 
 		fps++;
 		time += frame_time;
