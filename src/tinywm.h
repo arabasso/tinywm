@@ -335,6 +335,8 @@ typedef struct twm_data {
 		#ifdef TWM_GL
 			int pixel_attribs[TWM_GL_PIXEL_ATTRIBS_SIZE];
 			PFNGLXCREATECONTEXTATTRIBSARBPROC glXCreateContextAttribsARB;
+			PFNGLXSWAPINTERVALEXTPROC glXSwapIntervalEXT;
+			int swap_interval;
 		#endif
 
 	#elif defined(TWM_COCOA)
@@ -796,13 +798,13 @@ TWM_EXTERN_C_BEGIN
 		extern void twm_gl_set_pixel_attribs(int pixel_attribs[]);
 		extern twm_gl_context twm_gl_create_context(twm_window window, int* attribs);
 		extern void twm_gl_delete_context(twm_gl_context context);
-		extern void twm_gl_set_swap_interval(twm_gl_context context, int interval);
-		extern int twm_gl_get_swap_interval(twm_gl_context context);
 
 		#ifdef TWM_COCOA
 
 			extern void twm_gl_make_current(twm_gl_context context);
 			extern void twm_gl_swap_buffers(twm_gl_context context);
+			extern void twm_gl_set_swap_interval(twm_gl_context context, int interval);
+			extern int twm_gl_get_swap_interval(twm_gl_context context);
 		#endif
 	#endif
 
@@ -983,6 +985,14 @@ static inline void twm_ungrab_cursor() {
 
 		static inline void twm_gl_swap_buffers(twm_gl_context context) {
 			glXSwapBuffers(_twm_data.display, context->window);
+		}
+
+		static inline void twm_gl_set_swap_interval(twm_gl_context context, int interval) {
+			_twm_data.glXSwapIntervalEXT(_twm_data.display, context->window, interval);
+		}
+
+		static inline int twm_gl_get_swap_interval(twm_gl_context context) {
+			_twm_data.swap_interval;
 		}
 
 	#endif
@@ -2923,6 +2933,8 @@ int twm_init() {
 		memcpy(_twm_data.pixel_attribs, pixel_attribs, sizeof(pixel_attribs));
 
 		_twm_data.glXCreateContextAttribsARB = (PFNGLXCREATECONTEXTATTRIBSARBPROC)glXGetProcAddressARB((const GLubyte*)"glXCreateContextAttribsARB");
+		_twm_data.glXSwapIntervalEXT = (PFNGLXSWAPINTERVALEXTPROC) glXGetProcAddress((const GLubyte*)"glXSwapIntervalEXT");
+		_twm_data.swap_interval = 0;
 	}
 #endif
 

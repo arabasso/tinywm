@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 	int pixel_attribs[] = {
 		TWM_GL_DOUBLE_BUFFER, GL_TRUE,
 		TWM_GL_COLOR_BITS, 32,
-		TWM_GL_DEPTH_BITS, 32,
+		TWM_GL_DEPTH_BITS, 24,
 		TWM_GL_STENCIL_BITS, 8,
 		TWM_GL_SRGB_CAPABLE, GL_TRUE,
 		TWM_GL_SAMPLE_BUFFERS, GL_TRUE,
@@ -53,7 +53,7 @@ int main(int argc, char** argv) {
 
 	twm_gl_make_current(context);
 
-	twm_gl_set_swap_interval(context, 1);
+	twm_gl_set_swap_interval(context, 0);
 
 	gladLoaderLoadGL();
 
@@ -128,7 +128,7 @@ int main(int argc, char** argv) {
 
 		twm_gl_swap_buffers(context);
 
-		frame_time = twm_fps_limit(60, start_time);
+		frame_time = twm_fps_limit(-1, start_time);
 
 		fps++;
 		time += frame_time;
