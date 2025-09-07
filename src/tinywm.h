@@ -102,6 +102,8 @@
 
 		typedef HGLRC(WINAPI* PFNWGLCREATECONTEXTATTRIBSARBPROC)(HDC hDC,HGLRC hShareContext,const int* attribList);
 		typedef BOOL(WINAPI* PFNWGLCHOOSEPIXELFORMATARBPROC)(HDC hdc, const int* piAttribIList,const FLOAT* pfAttribFList,UINT nMaxFormats,int* piFormats,UINT* nNumFormats);
+		typedef BOOL(WINAPI* PFNWGLSWAPINTERVALEXTPROC)(int interval);
+		typedef int(WINAPI* PFNWGLGETSWAPINTERVALEXTPROC)(void);
 
 		typedef struct _twm_gl_context {
 			HWND hwnd;
@@ -315,6 +317,8 @@ typedef struct twm_data {
 			int pixel_attribs[TWM_GL_PIXEL_ATTRIBS_SIZE];
 			PFNWGLCHOOSEPIXELFORMATARBPROC wglChoosePixelFormatARB;
 			PFNWGLCREATECONTEXTATTRIBSARBPROC wglCreateContextAttribsARB;
+			PFNWGLSWAPINTERVALEXTPROC wglSwapIntervalEXT;
+			PFNWGLGETSWAPINTERVALEXTPROC wglGetSwapIntervalEXT;
 		#endif
 
 	#elif defined(TWM_X11)
@@ -792,13 +796,13 @@ TWM_EXTERN_C_BEGIN
 		extern void twm_gl_set_pixel_attribs(int pixel_attribs[]);
 		extern twm_gl_context twm_gl_create_context(twm_window window, int* attribs);
 		extern void twm_gl_delete_context(twm_gl_context context);
+		extern void twm_gl_set_swap_interval(twm_gl_context context, int interval);
+		extern int twm_gl_get_swap_interval(twm_gl_context context);
 
 		#ifdef TWM_COCOA
 
 			extern void twm_gl_make_current(twm_gl_context context);
 			extern void twm_gl_swap_buffers(twm_gl_context context);
-            extern void twm_gl_swap_interval(twm_gl_context context, int interval);
-
 		#endif
 	#endif
 
@@ -952,6 +956,14 @@ static inline void twm_ungrab_cursor() {
 
 		static inline void twm_gl_swap_buffers(twm_gl_context context) {
 			SwapBuffers(context->hdc);
+		}
+
+		static inline void twm_gl_set_swap_interval(twm_gl_context context, int interval) {
+			_twm_data.wglSwapIntervalEXT(interval);
+		}
+
+		static inline int twm_gl_get_swap_interval(twm_gl_context context) {
+			_twm_data.wglGetSwapIntervalEXT();
 		}
 
 	#endif
@@ -1482,10 +1494,10 @@ int twm_init() {
 		HGLRC temp_context = wglCreateContext(hdc);
 		wglMakeCurrent(hdc, temp_context);
 
-		_twm_data.wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC)
-			wglGetProcAddress("wglChoosePixelFormatARB");
-		_twm_data.wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC)
-			wglGetProcAddress("wglCreateContextAttribsARB");
+		_twm_data.wglChoosePixelFormatARB = (PFNWGLCHOOSEPIXELFORMATARBPROC) wglGetProcAddress("wglChoosePixelFormatARB");
+		_twm_data.wglCreateContextAttribsARB = (PFNWGLCREATECONTEXTATTRIBSARBPROC) wglGetProcAddress("wglCreateContextAttribsARB");
+		_twm_data.wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC) wglGetProcAddress("wglSwapIntervalEXT");
+		_twm_data.wglGetSwapIntervalEXT = (PFNWGLGETSWAPINTERVALEXTPROC)wglGetProcAddress("wglGetSwapIntervalEXT");;
 
 		wglMakeCurrent(NULL, NULL);
 		wglDeleteContext(temp_context);
@@ -5099,8 +5111,14 @@ void twm_gl_swap_buffers(twm_gl_context context) {
 	[context flushBuffer] ;
 }
 
-void twm_gl_swap_interval(twm_gl_context context, int interval) {
+void twm_gl_set_swap_interval(twm_gl_context context, int interval) {
     [context setValues:&interval forParameter:NSOpenGLCPSwapInterval];
+}
+
+int twm_gl_get_swap_interval(twm_gl_context context) {
+	int current;
+	[context getValues : &current forParameter : NSOpenGLCPSwapInterval] ;
+	return current;
 }
 
 #pragma clang diagnostic pop
