@@ -352,6 +352,8 @@ typedef struct twm_data {
 			#pragma clang diagnostic push
 			#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 				NSOpenGLPixelFormatAttribute pixel_attribs[TWM_GL_PIXEL_ATTRIBS_SIZE];
+                int swap_interval;
+                double refresh_rate;
 			#pragma clang diagnostic pop
 			#endif
 
@@ -4240,6 +4242,14 @@ int twm_init() {
 			};
 
 			memcpy(_twm_data.pixel_attribs, pixel_attribs, sizeof(pixel_attribs));
+        
+            _twm_data.swap_interval = 0;
+        
+            CGDirectDisplayID displayID = CGMainDisplayID();
+        
+            twm_screen * screen = &_twm_data.screen.screen[twm_screen_default()];
+        
+            _twm_data.refresh_rate = round(CGDisplayModeGetRefreshRate(CGDisplayCopyDisplayMode(screen->display_id)));
 		#pragma clang diagnostic pop
 		#endif
 
@@ -4268,6 +4278,8 @@ bool twm_change_screen_mode(int screen_index, int mode_index) {
 	if (CGDisplaySetDisplayMode(screen->display_id, screen->modes.mode[mode_index].mode_ref, NULL) != kCGErrorSuccess) return false;
 
 	screen->modes.current = mode_index;
+    
+    _twm_data.refresh_rate = round(CGDisplayModeGetRefreshRate(screen->modes.mode[mode_index].mode_ref));
 
 	return true;
 }
@@ -5100,6 +5112,7 @@ twm_gl_context twm_gl_create_context(twm_window window, int* attribs) {
 		NSOpenGLPixelFormat* pf = [[NSOpenGLPixelFormat alloc]initWithAttributes:context_attribs];
 		twm_gl_context glContext = [[NSOpenGLContext alloc]initWithFormat:pf shareContext : nil];
 		[glContext setView : [window contentView] ] ;
+        twm_gl_set_swap_interval(glContext, 0);
 
 		return glContext;
 	}
@@ -5120,10 +5133,20 @@ void twm_gl_make_current(twm_gl_context context) {
 }
 
 void twm_gl_swap_buffers(twm_gl_context context) {
-	[context flushBuffer] ;
+    if (_twm_data.swap_interval > 0) {
+        static double last_time = 0.0f;
+        
+        twm_fps_limit(_twm_data.refresh_rate / _twm_data.swap_interval, last_time);
+        
+        last_time = twm_time();
+    }
+    
+    [context flushBuffer] ;
 }
 
 void twm_gl_set_swap_interval(twm_gl_context context, int interval) {
+    _twm_data.swap_interval = interval;
+    
     [context setValues:&interval forParameter:NSOpenGLCPSwapInterval];
 }
 
