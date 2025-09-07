@@ -797,6 +797,7 @@ TWM_EXTERN_C_BEGIN
 
 			extern void twm_gl_make_current(twm_gl_context context);
 			extern void twm_gl_swap_buffers(twm_gl_context context);
+            extern void twm_gl_swap_interval(twm_gl_context context, int interval);
 
 		#endif
 	#endif
@@ -5097,6 +5098,11 @@ void twm_gl_make_current(twm_gl_context context) {
 void twm_gl_swap_buffers(twm_gl_context context) {
 	[context flushBuffer] ;
 }
+
+void twm_gl_swap_interval(twm_gl_context context, int interval) {
+    [context setValues:&interval forParameter:NSOpenGLCPSwapInterval];
+}
+
 #pragma clang diagnostic pop
 #endif
 
