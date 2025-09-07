@@ -5133,6 +5133,8 @@ void twm_gl_make_current(twm_gl_context context) {
 }
 
 void twm_gl_swap_buffers(twm_gl_context context) {
+    [context flushBuffer] ;
+
     if (_twm_data.swap_interval > 0) {
         static double last_time = 0.0f;
         
@@ -5140,8 +5142,6 @@ void twm_gl_swap_buffers(twm_gl_context context) {
         
         last_time = twm_time();
     }
-    
-    [context flushBuffer] ;
 }
 
 void twm_gl_set_swap_interval(twm_gl_context context, int interval) {
