@@ -48,14 +48,14 @@ HRESULT d3d12_create_rtv(ID3D12Device* device, IDXGISwapChain1* swap_chain, ID3D
 HRESULT d3d12_wait_for_gpu(ID3D12CommandQueue* command_queue, ID3D12Fence* fence, HANDLE fence_event, d3d12_frame_resource& frame_resource);
 
 int main(int argc, char** argv) {
-	const UINT FRAME_COUNT = 2;
+	const UINT FRAME_COUNT = 3;
 
-	int width = 1280;
-	int height = 720;
+	int width = 1600;
+	int height = 900;
 
 	twm_init();
 
-	twm_window window = twm_create_window("TINY Window Manager - Direct3D 12 With ImGUI", TWM_CENTER, TWM_CENTER, 1280, 720, TWM_WINDOW_DEFAULT);
+	twm_window window = twm_create_window("TINY Window Manager - Direct3D 12 With ImGUI", TWM_CENTER, TWM_CENTER, width, height, TWM_WINDOW_DEFAULT);
 
 	ComPtr<IDXGIFactory4> factory = nullptr;
 	ThrowIfFailed(d3d12_create_dxgi_factory(&factory));

@@ -59,12 +59,12 @@ color random_color() {
 int main(int argc, char** argv) {
 	twm_init();
 
-	int width = 1280;
-	int height = 720;
+	int width = 1600;
+	int height = 900;
 
-	twm_window window = twm_create_window("TINY Window Manager - Direct3D 11", TWM_CENTER, TWM_CENTER, 1280, 720, TWM_WINDOW_DEFAULT);
+	twm_window window = twm_create_window("TINY Window Manager - Direct3D 11", TWM_CENTER, TWM_CENTER, width, height, TWM_WINDOW_DEFAULT);
 
-	const int FRAME_COUNT = 2;
+	const int FRAME_COUNT = 3;
 
 	ComPtr<ID3D11Device> device = nullptr;
 	ComPtr<ID3D11DeviceContext> immediate_context = nullptr;

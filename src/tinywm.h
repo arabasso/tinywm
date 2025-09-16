@@ -967,7 +967,7 @@ static inline void twm_ungrab_cursor() {
 		}
 
 		static inline int twm_gl_get_swap_interval(twm_gl_context context) {
-			_twm_data.wglGetSwapIntervalEXT();
+			return _twm_data.wglGetSwapIntervalEXT();
 		}
 
 	#endif
@@ -994,7 +994,7 @@ static inline void twm_ungrab_cursor() {
 		}
 
 		static inline int twm_gl_get_swap_interval(twm_gl_context context) {
-			_twm_data.swap_interval;
+			return _twm_data.swap_interval;
 		}
 
 	#endif

@@ -4,7 +4,7 @@ int main(int argc, char** argv) {
 
 	twm_init();
 
-	twm_window window = twm_create_window("TINY Window Manager - Window Info", 100, 100, 1280, 720, TWM_WINDOW_DEFAULT);
+	twm_window window = twm_create_window("TINY Window Manager - Window Info", 100, 100, 1600, 900, TWM_WINDOW_DEFAULT);
 
 	twm_show_window(window, true);
 

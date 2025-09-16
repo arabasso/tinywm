@@ -38,10 +38,10 @@ int main(int argc, char** argv) {
 
 	twm_gl_set_pixel_attribs(pixel_attribs);
 
-	int width = 1280;
-	int height = 720;
+	int width = 1600;
+	int height = 900;
 
-	twm_window window = twm_create_window("TINY Window Manager - OpenGL 4", TWM_CENTER, TWM_CENTER, 1280, 720, TWM_WINDOW_DEFAULT);
+	twm_window window = twm_create_window("TINY Window Manager - OpenGL 4", TWM_CENTER, TWM_CENTER, width, height, TWM_WINDOW_DEFAULT);
 
 	int attribs[] = {
 		TWM_GL_CONTEXT_MAJOR_VERSION, 4,
