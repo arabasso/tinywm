@@ -4279,7 +4279,9 @@ bool twm_change_screen_mode(int screen_index, int mode_index) {
 
 	screen->modes.current = mode_index;
     
+#ifdef TWM_GL
     _twm_data.refresh_rate = round(CGDisplayModeGetRefreshRate(screen->modes.mode[mode_index].mode_ref));
+#endif
 
 	return true;
 }
