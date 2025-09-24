@@ -32,6 +32,7 @@
 	#include <ShellScalingApi.h>
 	#include <hidusage.h>
 	#include <winerror.h>
+	#include <dwmapi.h>
 
 	#ifdef TWM_VULKAN
 		#include <vulkan/vulkan.h>
@@ -1602,6 +1603,15 @@ twm_window twm_create_window(const char* title, int x, int y, int width, int hei
 	);
 
 	if (hwnd == NULL) return NULL;
+
+	BOOL dark = TRUE;
+	DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &dark, sizeof(dark));
+
+	DWORD corner = 2; // DWMWCP_ROUND
+	DwmSetWindowAttribute(hwnd, DWMWA_WINDOW_CORNER_PREFERENCE, &corner, sizeof(corner));
+
+	DWORD backdrop = 2; // Mica
+	DwmSetWindowAttribute(hwnd, DWMWA_SYSTEMBACKDROP_TYPE, &backdrop, sizeof(backdrop));
 
 	// Fix Flickering on switch to borderless
 	SetWindowLong(hwnd, GWL_STYLE, WS_POPUP);

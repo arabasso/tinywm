@@ -45,7 +45,7 @@ Add define before `#include <tinywm.h>` for each platform.
 And link libraries on your project:
 
 ```
-winmm Shcore
+winmm Shcore dwmapi
 ```
 
 ### For Linux

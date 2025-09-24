@@ -12,7 +12,7 @@ target_include_directories(tinywm INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
 
 if (WIN32)
 	target_compile_definitions(tinywm INTERFACE TWM_WIN32)
-	target_link_libraries (tinywm INTERFACE winmm Shcore)
+	target_link_libraries (tinywm INTERFACE winmm Shcore dwmapi)
 elseif (APPLE)
 	target_compile_definitions(tinywm INTERFACE TWM_COCOA)
 	target_link_libraries (tinywm INTERFACE "-framework Cocoa" "-framework Carbon" "-framework CoreGraphics" "-framework IOKit" "-framework ApplicationServices")
